@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuguyu | The Smart Gym Operating System</title>
+
+    <!-- Pageclip CSS -->
+    <link rel="stylesheet" href="https://s.pageclip.co/v1/pageclip.css" media="screen">
+
+    <!-- Google Fonts for Indian Languages -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 8s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out 4s infinite',
+                        'pulse-slow': 'pulse 12s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151e32',
+                        }
+                    },
+                    transitionTimingFunction: {
+                        'premium': 'cubic-bezier(0.22, 1, 0.36, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CORE UTILITIES */
+        body {
+            background-color: #0f172a;
+            color: white;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* PREMIUM ANIMATION UTILITIES */
+        .premium-transition {
+            transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+            transition-duration: 0.5s;
+        }
+
+        /* DEVICE MOCKUP FRAME */
+        .device-frame {
+            position: relative;
+            border-radius: 2.5rem;
+            border: 8px solid #1e293b;
+            box-shadow:
+                0 0 0 2px #334155,
+                0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            background-color: #000;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
+        }
+
+        .group:hover .device-frame {
+            transform: scale(1.03);
+            border-color: #475569;
+            box-shadow:
+                0 0 0 2px #475569,
+                0 35px 60px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        /* 3D Tilt for Hero */
+        .hero-tilt {
+            transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: -20px 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-tilt:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
+        }
+
+        /* Scroll Animations */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out;
+        }
+
+        .faq-answer.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .selection-yellow ::selection {
+            background-color: #facc15;
+            color: #0f172a;
+        }
+
+        /* Glassmorphism Utilities with Hover Lift */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button Hovers */
+        .btn-hover {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(250, 204, 21, 0.4);
+        }
+
+        /* Language Switcher */
+        .lang-btn.active {
+            color: #facc15;
+            /* Yellow-400 */
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-lang-btn.active {
+            color: #facc15;
+            border-color: #facc15;
+            background-color: rgba(250, 204, 21, 0.1);
+        }
+    </style>
+</head>
+
+<body class="selection-yellow relative min-h-screen">
+
+    <!-- BACKGROUND GLOWS -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div
+            class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-yellow-500/5 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow">
+        </div>
+        <div
+            class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-900/10 rounded-full blur-[100px] mix-blend-screen">
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar"
+        class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6 border-b border-transparent">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+
+            <!-- Logo -->
+            <div class="text-2xl font-bold tracking-tighter flex items-center gap-2 group cursor-default z-50">
+                <div
+                    class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center text-slate-900 transition-transform duration-500 group-hover:rotate-12">
+                    <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                </div>
+                <span>Yuguyu<span class="text-yellow-400">.</span></span>
+            </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <a href="#features" class="hover:text-yellow-400 transition-colors duration-300"
+                    data-i18n="nav_features">Features</a>
+                <a href="#twin" class="hover:text-yellow-400 transition-colors duration-300"
+                    data-i18n="nav_twin">Brand</a>
+                <a href="#model" class="hover:text-yellow-400 transition-colors duration-300" data-i18n="nav_how">How it
+                    Works</a>
+                <a href="#faqs" class="hover:text-yellow-400 transition-colors duration-300"
+                    data-i18n="nav_faqs">FAQs</a>
+
+                <!-- Language Switcher (Desktop) -->
+                <div
+                    class="flex items-center p-1 rounded-full bg-slate-800/50 backdrop-blur-md border border-white/10 text-xs shadow-inner">
+                    <button onclick="setLanguage('en')"
+                        class="lang-btn px-3 py-1.5 rounded-full transition-all duration-300 active"
+                        id="btn-en">EN</button>
+                    <button onclick="setLanguage('hi')"
+                        class="lang-btn px-3 py-1.5 rounded-full transition-all duration-300" id="btn-hi">HI</button>
+                    <button onclick="setLanguage('kn')"
+                        class="lang-btn px-3 py-1.5 rounded-full transition-all duration-300" id="btn-kn">KN</button>
+                </div>
+
+                <!-- Member Login Button (Secondary) -->
+                <a href="login.html" target="_blank"
+                    class="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 rounded-full transition-all duration-300 backdrop-blur-sm flex items-center gap-2 group">
+                    <i data-lucide="user" class="w-4 h-4 group-hover:text-yellow-400 transition-colors"></i>
+                    <span data-i18n="nav_login">Member Login</span>
+                </a>
+
+                <!-- Partner CTA (Primary) -->
+                <button onclick="scrollToContact()"
+                    class="px-5 py-2.5 bg-yellow-400 text-slate-900 font-bold rounded-full hover:bg-yellow-300 transition-all shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(250,204,21,0.5)] btn-hover"
+                    data-i18n="nav_partner">
+                    Become a Partner
+                </button>
+            </div>
+
+            <!-- Mobile Buttons Container -->
+            <div class="flex items-center gap-4 lg:hidden z-50">
+                <!-- Mobile Language Dropdown Trigger (Visible always) -->
+                <div class="relative group">
+                    <button id="mobile-lang-trigger"
+                        class="flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-800/80 border border-white/10 text-xs font-bold text-yellow-400 backdrop-blur-md"
+                        onclick="toggleMobileLangMenu()">
+                        <span id="current-lang-display">EN</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                    </button>
+                    <!-- Dropdown -->
+                    <div id="mobile-lang-dropdown"
+                        class="absolute top-full right-0 mt-2 w-24 bg-slate-900 border border-white/10 rounded-xl shadow-xl hidden overflow-hidden transition-all origin-top-right">
+                        <button onclick="setLanguage('en'); toggleMobileLangMenu()"
+                            class="w-full text-left px-4 py-3 text-sm hover:bg-white/5 text-slate-300 hover:text-white">English</button>
+                        <button onclick="setLanguage('hi'); toggleMobileLangMenu()"
+                            class="w-full text-left px-4 py-3 text-sm hover:bg-white/5 text-slate-300 hover:text-white">Hindi</button>
+                        <button onclick="setLanguage('kn'); toggleMobileLangMenu()"
+                            class="w-full text-left px-4 py-3 text-sm hover:bg-white/5 text-slate-300 hover:text-white">Kannada</button>
+                    </div>
+                </div>
+
+                <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu"
+            class="hidden absolute top-0 left-0 w-full h-screen bg-slate-950/95 backdrop-blur-xl flex-col pt-24 px-6 gap-6 transition-all duration-300 z-40">
+            <a href="#features" class="text-xl font-medium border-b border-white/10 pb-4" onclick="closeMenu()"
+                data-i18n="nav_features">Features</a>
+            <a href="#twin" class="text-xl font-medium border-b border-white/10 pb-4" onclick="closeMenu()"
+                data-i18n="nav_twin">Digital Twin</a>
+            <a href="#model" class="text-xl font-medium border-b border-white/10 pb-4" onclick="closeMenu()"
+                data-i18n="nav_how">How it Works</a>
+            <a href="login.html" target="_blank"
+                class="text-xl font-medium border-b border-white/10 pb-4 flex items-center gap-3 text-slate-300"><i
+                    data-lucide="user" class="w-5 h-5 text-yellow-400"></i> <span data-i18n="nav_login">Member
+                    Login</span></a>
+
+            <button onclick="closeMenu(); scrollToContact()"
+                class="w-full py-4 bg-yellow-400 text-slate-900 font-bold text-lg rounded-xl mt-4 shadow-lg shadow-yellow-400/20"
+                data-i18n="nav_partner">Become a Partner</button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+                <!-- Text Content -->
+                <div class="fade-in-section space-y-8 z-10">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-sm text-sm font-semibold text-yellow-400 cursor-default hover:bg-white/10 transition-colors duration-300">
+                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+                        <span data-i18n="hero_badge">The Gym OS Revolution</span>
+                    </div>
+
+                    <h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+                        <span data-i18n="hero_title_1">Turn Your Gym Into A</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200"
+                            data-i18n="hero_title_2">Smart Gym.</span>
+                    </h1>
+
+                    <p class="text-lg text-slate-400 leading-relaxed max-w-xl" data-i18n="hero_desc">
+                        Replace paper registers and fragmented tools with a single, unified Operating System. The first
+                        platform that connects your <b>Command Center</b> with your members' <b>Experience Engine</b>.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button onclick="scrollToContact()"
+                            class="px-8 py-4 bg-yellow-400 text-slate-900 font-bold rounded-2xl hover:bg-yellow-300 transition-all shadow-[0_0_40px_-10px_rgba(250,204,21,0.5)] btn-hover flex items-center justify-center gap-2 group">
+                            <span data-i18n="hero_cta">Get Command Center</span>
+                            <i data-lucide="chevron-right"
+                                class="group-hover:translate-x-1 transition-transform w-5 h-5 duration-300"></i>
+                        </button>
+                    </div>
+
+                    <div
+                        class="pt-8 flex flex-wrap items-center gap-6 text-slate-400 text-sm font-medium border-t border-white/5 mt-8">
+                        <span class="flex items-center gap-2"><i data-lucide="check-circle"
+                                class="text-yellow-500 w-5 h-5"></i> <span data-i18n="hero_check_1">Real-time
+                                Operations</span></span>
+                        <span class="flex items-center gap-2"><i data-lucide="check-circle"
+                                class="text-yellow-500 w-5 h-5"></i> <span data-i18n="hero_check_2">Zero Revenue
+                                Leakage</span></span>
+                        <span class="flex items-center gap-2"><i data-lucide="check-circle"
+                                class="text-yellow-500 w-5 h-5"></i> <span data-i18n="hero_check_3">100%
+                                Ad-Free</span></span>
+                    </div>
+                </div>
+
+                <!-- HERO VISUAL -->
+                <div class="relative mt-12 lg:mt-0 flex justify-center">
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-gradient-to-tr from-yellow-400/10 to-transparent rounded-full blur-3xl pointer-events-none">
+                    </div>
+
+                    <div class="hero-tilt relative z-10 w-[300px] sm:w-[320px]">
+                        <div class="device-frame aspect-[9/19.5]">
+                            <img src="1.png" alt="Yuguyu Dashboard" class="w-full h-full object-cover">
+                            <div class="absolute top-6 right-4 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20"
+                                data-i18n="phone_badge">
+                                Partner Access Active
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION (Complete App Overview) -->
+    <section id="features" class="py-24 bg-slate-900 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 max-w-3xl mx-auto fade-in-section">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6"><span data-i18n="features_title_1">For Owners:</span>
+                    <span class="text-yellow-400" data-i18n="features_title_2">The Command Center</span>
+                </h2>
+                <p class="text-slate-400 text-lg" data-i18n="features_subtitle">
+                    Your gym's nerve center. See everything that matters at a glance — revenue, members, and operations
+                    — all in real-time.
+                </p>
+            </div>
+
+            <!-- Owner Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-24">
+
+                <!-- Card 1: Dashboard -->
+                <div
+                    class="fade-in-section glass-panel rounded-3xl p-8 flex flex-col items-center text-center group cursor-default">
+                    <div
+                        class="mb-6 p-4 bg-yellow-400/10 rounded-full text-yellow-400 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2" data-i18n="feat_1_title">The "Truth" Screen</h3>
+                    <p class="text-slate-400 text-sm mb-8" data-i18n="feat_1_desc">Real-time occupancy & revenue at a
+                        glance. Track active members and new signups instantly.</p>
+                    <div class="w-full rounded-2xl shadow-2xl mt-auto overflow-hidden border border-white/5">
+                        <img src="owner_dashboard.png" alt="Dashboard" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+
+                <!-- Card 2: Digital Register -->
+                <div class="fade-in-section glass-panel rounded-3xl p-8 flex flex-col items-center text-center group cursor-default"
+                    style="transition-delay: 150ms">
+                    <div
+                        class="mb-6 p-4 bg-red-500/10 rounded-full text-red-400 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="users" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2" data-i18n="feat_2_title">Digital Member Register</h3>
+                    <p class="text-slate-400 text-sm mb-8" data-i18n="feat_2_desc">
+                        Replace paper notebooks. Searchable database tracking Plan Type, Join Date, and Expiry status.
+                    </p>
+                    <div class="w-full rounded-2xl shadow-2xl mt-auto overflow-hidden border border-white/5">
+                        <img src="owner_members.png" alt="Member Register" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Member Section Header -->
+            <div class="text-center mb-16 max-w-3xl mx-auto fade-in-section">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6"><span data-i18n="features_title_3">For Members:</span>
+                    <span class="text-pink-400" data-i18n="features_title_4">The Experience Engine</span>
+                </h2>
+                <p class="text-slate-400 text-lg" data-i18n="features_subtitle_2">
+                    A premium pocket coach your members will love. Track nutrition, log workouts, and watch their
+                    progress come alive.
+                </p>
+            </div>
+
+            <!-- Member Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+
+                <!-- Card 3: Pocket Nutritionist -->
+                <div class="fade-in-section glass-panel rounded-3xl p-8 flex flex-col items-center text-center group cursor-default"
+                    style="transition-delay: 300ms">
+                    <div
+                        class="mb-6 p-4 bg-blue-500/10 rounded-full text-blue-400 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="utensils" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2" data-i18n="feat_3_title">Pocket Nutritionist</h3>
+                    <p class="text-slate-400 text-sm mb-8" data-i18n="feat_3_desc">Set calorie goals (e.g. 2000 kcal).
+                        Track Proteins, Carbs, and Fats. Virtual coaching in their pocket.</p>
+                    <div
+                        class="device-frame w-48 shadow-2xl mt-auto border-4 border-slate-800 rounded-[2.5rem] overflow-hidden">
+                        <img src="member_nutrition.png" alt="Nutrition" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Card 4: Digital Workout Log -->
+                <div class="fade-in-section glass-panel rounded-3xl p-8 flex flex-col items-center text-center group cursor-default"
+                    style="transition-delay: 100ms">
+                    <div
+                        class="mb-6 p-4 bg-green-500/10 rounded-full text-green-400 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="dumbbell" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2" data-i18n="feat_4_title">Digital Workout Log</h3>
+                    <p class="text-slate-400 text-sm mb-8" data-i18n="feat_4_desc">Access split routines (Push, Chest,
+                        Leg Day). Log sets, reps, and RPE. Replaces paper workout diaries.</p>
+                    <div
+                        class="device-frame w-48 shadow-2xl mt-auto border-4 border-slate-800 rounded-[2.5rem] overflow-hidden">
+                        <img src="member_workout.png" alt="Workout Log" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Growth Journey Subsection -->
+            <div class="mt-20 fade-in-section">
+                <div class="text-center mb-12">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 text-sm font-bold text-emerald-400 mb-6 uppercase tracking-wider">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        <span data-i18n="journey_badge">Beyond Tracking</span>
+                    </div>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-4">
+                        <span data-i18n="journey_title_1">Your Members'</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400"
+                            data-i18n="journey_title_2">Growth Journey</span>
+                    </h3>
+                    <p class="text-slate-400 max-w-2xl mx-auto text-lg" data-i18n="journey_desc">
+                        More than just numbers. A complete transformation companion that celebrates wins,
+                        surfaces actionable insights, and keeps members engaged day after day.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Journey Card -->
+                    <div
+                        class="glass-panel rounded-3xl p-8 group hover:border-emerald-500/30 transition-all duration-500">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div
+                                class="p-3 bg-emerald-500/10 rounded-2xl text-emerald-400 group-hover:scale-110 transition-transform duration-500">
+                                <i data-lucide="sparkles" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-1" data-i18n="journey_card_1_title">Smart Insights</h4>
+                                <p class="text-slate-400 text-sm" data-i18n="journey_card_1_desc">
+                                    Personalized nudges that notice patterns. "You haven't logged in 2 days" or
+                                    "Great week! Your protein intake is up 15%."
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="device-frame w-40 mx-auto shadow-2xl border-4 border-slate-800 rounded-[2rem] overflow-hidden">
+                            <img src="member_journey.jpg" alt="Journey Insights" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- Calendar Card -->
+                    <div class="glass-panel rounded-3xl p-8 group hover:border-cyan-500/30 transition-all duration-500">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div
+                                class="p-3 bg-cyan-500/10 rounded-2xl text-cyan-400 group-hover:scale-110 transition-transform duration-500">
+                                <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-1" data-i18n="journey_card_2_title">Diet Calendar</h4>
+                                <p class="text-slate-400 text-sm" data-i18n="journey_card_2_desc">
+                                    Visual history of every meal logged. Tap any date to see exactly what they ate,
+                                    macro breakdowns, and daily totals.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="device-frame w-40 mx-auto shadow-2xl border-4 border-slate-800 rounded-[2rem] overflow-hidden">
+                            <img src="member_calendar.jpg" alt="Diet Calendar" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tagline -->
+                <p class="text-center mt-10 text-slate-500 italic text-sm" data-i18n="journey_tagline">
+                    "Every rep recorded. Every meal logged. Every win celebrated."
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- YOUR GYM'S DIGITAL TWIN (Dedicated Section) -->
+    <section id="twin" class="py-24 bg-slate-850 relative border-y border-white/5">
+        <div class="absolute inset-0 bg-purple-900/5 -z-10"></div>
+        <div class="container mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-in-section">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-400 mb-6 uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                        <span data-i18n="twin_badge">Brand Integration</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                        <span data-i18n="twin_title_1">Your Gym.</span><br>
+                        <span data-i18n="twin_title_2">Your Rules.</span><br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
+                            data-i18n="twin_title_3">One Ecosystem.</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg leading-relaxed mb-8" data-i18n="twin_desc">
+                        <b>High Engagement = High Retention.</b> The more your members use the app, the more they stay
+                        committed to your gym. We help you build habits that keep them coming back.
+                    </p>
+
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-4">
+                            <div class="mt-1 p-2 rounded-lg bg-purple-500/20 text-purple-400"><i
+                                    data-lucide="layout-template" class="w-5 h-5"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white" data-i18n="twin_point_1_title">Co-Branded Experience
+                                </h4>
+                                <p class="text-sm text-slate-400" data-i18n="twin_point_1_desc">Members see this as part
+                                    of their gym membership experience. Seamless integration, no confusion.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="mt-1 p-2 rounded-lg bg-purple-500/20 text-purple-400"><i data-lucide="users"
+                                    class="w-5 h-5"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white" data-i18n="twin_point_2_title">The Retention Engine
+                                </h4>
+                                <p class="text-sm text-slate-400" data-i18n="twin_point_2_desc">Digital engagement
+                                    drives physical attendance. Bridge the gap between the kitchen and the squat rack.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="mt-1 p-2 rounded-lg bg-purple-500/20 text-purple-400"><i
+                                    data-lucide="shield-check" class="w-5 h-5"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white" data-i18n="twin_point_3_title">Zero Competitor Noise
+                                </h4>
+                                <p class="text-sm text-slate-400" data-i18n="twin_point_3_desc">A clean, focused
+                                    environment tailored to your programming. No distraction.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="fade-in-section relative h-full min-h-[400px] flex items-center justify-center">
+                    <!-- Schedule Screenshot -->
+                    <div
+                        class="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-full blur-[80px]">
+                    </div>
+                    <div
+                        class="relative w-full rounded-2xl shadow-2xl overflow-hidden border border-purple-500/30 transform hover:scale-[1.02] transition-transform duration-500">
+                        <img src="owner_schedule.png" alt="Schedule Management" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM / SOLUTION -->
+    <section class="py-24 bg-slate-900 relative">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+                <div class="fade-in-section">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6"><span data-i18n="prob_title_1">Stop the</span>
+                        <br /><span class="text-red-400" data-i18n="prob_title_2">Leakage.</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg leading-relaxed" data-i18n="prob_desc_1">
+                        When you tell a member to "just download a generic tracking app", you are sending them to an app
+                        that shows them ads for other coaches and supplement brands.
+                    </p>
+                    <p class="text-white font-bold mt-4 text-lg" data-i18n="prob_desc_2">Keep them in your ecosystem.
+                    </p>
+                </div>
+                <div class="grid gap-4 fade-in-section" style="transition-delay: 200ms;">
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover:border-red-400/30">
+                        <i data-lucide="ban" class="text-red-400 shrink-0 mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white" data-i18n="prob_point_1_title">No Competitor Ads</h4>
+                            <p class="text-sm text-slate-400" data-i18n="prob_point_1_desc">A completely clean, ad-free
+                                environment.</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover:border-yellow-400/30">
+                        <i data-lucide="lock" class="text-yellow-400 shrink-0 mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white" data-i18n="prob_point_2_title">Data You Can See</h4>
+                            <p class="text-sm text-slate-400" data-i18n="prob_point_2_desc">Access member data to
+                                monitor compliance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STAND OUT SECTION -->
+    <section class="py-24 bg-slate-850 relative border-t border-white/5">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Cards Left -->
+                <div class="grid gap-4 fade-in-section order-2 md:order-1">
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover:border-purple-400/30">
+                        <i data-lucide="swords" class="text-purple-400 shrink-0 mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white" data-i18n="standout_point_1_title">Beat the Chains</h4>
+                            <p class="text-sm text-slate-400" data-i18n="standout_point_1_desc">Big franchises have
+                                their own apps. Now you do too. Level the playing field instantly.</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover:border-blue-400/30">
+                        <i data-lucide="crown" class="text-blue-400 shrink-0 mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-white" data-i18n="standout_point_2_title">Premium Status</h4>
+                            <p class="text-sm text-slate-400" data-i18n="standout_point_2_desc">Command premium
+                                positioning with a modern, tech-enabled experience.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Right -->
+                <div class="fade-in-section order-1 md:order-2">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6"><span data-i18n="standout_title_1">Stand Out.</span>
+                        <br /><span class="text-purple-400" data-i18n="standout_title_2">From the Crowd.</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg leading-relaxed" data-i18n="standout_desc">
+                        Every gym has dumbbells. Start operating like a tech company. Differentiate your facility from
+                        generic gyms and big chains.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTNERSHIP MODEL -->
+    <section id="model" class="py-24 border-t border-white/5 bg-slate-850">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in-section">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6"><span data-i18n="model_title_1">The</span> <span
+                        class="text-yellow-400">Yuguyu X</span> <span data-i18n="model_title_2">Model</span></h2>
+                <p class="text-slate-400 text-lg" data-i18n="model_desc">
+                    We don't sell to individuals. We partner with facilities to provide premium access keys as a
+                    value-add to membership tiers.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 relative z-10">
+                <!-- Step 1 -->
+                <div class="fade-in-section glass-panel p-8 rounded-3xl text-center relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 p-4 opacity-10 font-bold text-9xl text-white leading-none transition-transform duration-700 group-hover:translate-y-2">
+                        1</div>
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mx-auto mb-6 text-yellow-400 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2" data-i18n="step_1_title">Onboard</h4>
+                    <p class="text-slate-400 text-sm" data-i18n="step_1_desc">Purchase a license pack. We set up your
+                        branded instance.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="fade-in-section glass-panel p-8 rounded-3xl text-center relative overflow-hidden group"
+                    style="transition-delay: 150ms">
+                    <div
+                        class="absolute top-0 right-0 p-4 opacity-10 font-bold text-9xl text-white leading-none transition-transform duration-700 group-hover:translate-y-2">
+                        2</div>
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-yellow-400 flex items-center justify-center mx-auto mb-6 text-slate-900 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2" data-i18n="step_2_title">Manage via Portal</h4>
+                    <p class="text-slate-400 text-sm" data-i18n="step_2_desc">Grant or revoke access to members directly
+                        from your Gym Portal.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="fade-in-section glass-panel p-8 rounded-3xl text-center relative overflow-hidden group"
+                    style="transition-delay: 300ms">
+                    <div
+                        class="absolute top-0 right-0 p-4 opacity-10 font-bold text-9xl text-white leading-none transition-transform duration-700 group-hover:translate-y-2">
+                        3</div>
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mx-auto mb-6 text-green-400 group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="smartphone" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2" data-i18n="step_3_title">Member Unlocks</h4>
+                    <p class="text-slate-400 text-sm" data-i18n="step_3_desc">Member downloads app, logs in, and gets
+                        the Pro experience instantly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQS -->
+    <section id="faqs" class="py-24 relative">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="text-center mb-12 fade-in-section">
+                <h2 class="text-3xl md:text-4xl font-bold" data-i18n="faq_header">Gym Owner <span
+                        class="text-yellow-400">FAQs</span></h2>
+                <p class="text-slate-400 mt-4" data-i18n="faq_subheader">Real questions about implementation and value.
+                </p>
+            </div>
+
+            <div class="space-y-4 fade-in-section" style="transition-delay: 100ms">
+                <!-- FAQ 1 -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-lg text-slate-200" data-i18n="faq_1_q">Do I have to manually enter
+                            all my member details?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-yellow-400 transition-transform duration-500"></i>
+                    </button>
+                    <div class="faq-answer bg-slate-800/50">
+                        <div class="p-6 pt-0 text-slate-400 text-sm leading-relaxed" data-i18n="faq_1_a">
+                            Not at all. We offer a <b>White-Glove Setup Service</b>. You simply hand us your current
+                            register or Excel sheet, and our team digitizes everything for you within 24 hours. You
+                            start with a fully populated dashboard from Day 1.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-lg text-slate-200" data-i18n="faq_2_q">Why should I pay for software
+                            when I have a notebook?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-yellow-400 transition-transform duration-500"></i>
+                    </button>
+                    <div class="faq-answer bg-slate-800/50">
+                        <div class="p-6 pt-0 text-slate-400 text-sm leading-relaxed" data-i18n="faq_2_a">
+                            A notebook cannot send push notifications or track calorie intake. Yuguyu pays for itself if
+                            it saves just one member from quitting. By giving your members a premium diet and workout
+                            tracker, you stop them from leaving for expensive franchise gyms. <b>It's not an expense;
+                                it's a retention tool.</b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-lg text-slate-200" data-i18n="faq_3_q">I'm not very tech-savvy. Is
+                            this hard to use?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-yellow-400 transition-transform duration-500"></i>
+                    </button>
+                    <div class="faq-answer bg-slate-800/50">
+                        <div class="p-6 pt-0 text-slate-400 text-sm leading-relaxed" data-i18n="faq_3_a">
+                            We designed Yuguyu specifically for gym owners, not IT experts. <b>If you can use WhatsApp,
+                                you can use Yuguyu.</b> The dashboard is visual, simple, and in English. Plus, we
+                            provide 24/7 WhatsApp support if you ever get stuck.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-lg text-slate-200" data-i18n="faq_4_q">Is my member data safe? Will
+                            other gyms see it?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-yellow-400 transition-transform duration-500"></i>
+                    </button>
+                    <div class="faq-answer bg-slate-800/50">
+                        <div class="p-6 pt-0 text-slate-400 text-sm leading-relaxed" data-i18n="faq_4_a">
+                            Absolutely not. Your data is encrypted and stored in a private <b>"Walled Garden."</b> You
+                            own your data. We do not share member lists with other gyms, and we strictly prohibit
+                            competitor advertising within your gym's ecosystem.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT / PILOT CTA (PAGECLIP ENABLED) -->
+    <section id="contact" class="py-24 border-t border-white/10 bg-gradient-to-b from-slate-900 to-slate-950">
+        <div class="container mx-auto px-6 max-w-5xl">
+            <div
+                class="glass-panel rounded-[3rem] p-8 md:p-16 text-center border-yellow-400/20 shadow-2xl relative overflow-hidden fade-in-section">
+                <!-- Decorative BG -->
+                <div class="absolute top-0 left-0 w-full h-full bg-yellow-400/5 -z-10"></div>
+
+                <h2 class="text-4xl md:text-6xl font-bold mb-6" data-i18n="contact_title">Start Your Pilot.</h2>
+                <p class="text-slate-300 text-lg mb-10 max-w-2xl mx-auto" data-i18n="contact_desc">
+                    Partner with Yuguyu to bring elite nutrition infrastructure to your facility.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-12 text-left max-w-4xl mx-auto">
+                    <!-- Contact Info -->
+                    <div class="space-y-6 flex flex-col justify-center">
+                        <div class="flex items-center gap-4 group cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-full bg-yellow-400 text-slate-900 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-yellow-400 uppercase font-bold tracking-wider"
+                                    data-i18n="partnerships">Partnerships</p>
+                                <a href="mailto:yuguyu@zohomail.com"
+                                    class="text-xl font-bold hover:text-white transition-colors">yuguyu@zohomail.in</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-full bg-slate-800 text-white flex items-center justify-center shrink-0 border border-white/10 group-hover:scale-110 transition-transform">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider"
+                                    data-i18n="call_us">Call Us</p>
+                                <p class="text-xl font-bold">+91 80739 94029</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pageclip Form -->
+                    <form action="https://send.pageclip.co/RFky35EWt9pUKpPolnJlJ92QXnAVepEK/Contact_Us-from"
+                        class="pageclip-form space-y-4" method="post">
+                        <input type="text" id="contact-name" name="name" placeholder="Full Name" required
+                            class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-yellow-400 focus:outline-none transition-colors">
+                        <input type="text" name="gym" placeholder="Gym / Facility Name" required
+                            class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-yellow-400 focus:outline-none transition-colors">
+                        <input type="email" name="email" placeholder="Email Address" required
+                            class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-yellow-400 focus:outline-none transition-colors">
+                        <input type="hidden" name="subject" value="New Partnership Request (Yuguyu Website)">
+                        <button type="submit"
+                            class="pageclip-form__submit w-full bg-yellow-400 text-slate-900 font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg shadow-yellow-400/20 btn-hover">
+                            <span data-i18n="request_deck">Request Partner Deck</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW FOOTER TILE -->
+    <footer class="relative pb-12 pt-6 bg-slate-950">
+        <div class="container mx-auto px-6">
+            <div class="glass-panel rounded-3xl p-12 md:p-16 relative overflow-hidden fade-in-section">
+                <div class="grid md:grid-cols-4 gap-12">
+
+                    <div class="col-span-1 md:col-span-2 space-y-6">
+                        <div class="text-2xl font-bold tracking-tighter flex items-center gap-2 group cursor-default">
+                            <div
+                                class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center text-slate-900 transition-transform duration-500 group-hover:rotate-12">
+                                <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                            </div>
+                            <span>Yuguyu<span class="text-yellow-400">.</span></span>
+                        </div>
+                        <p class="text-slate-400 text-sm max-w-sm leading-relaxed" data-i18n="footer_desc">
+                            The operating system for smart gyms. Replace analog tools with a digital ecosystem.
+                        </p>
+
+                        <div class="flex items-start gap-3 text-sm text-slate-300">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-yellow-400 shrink-0 mt-0.5"></i>
+                            <div class="leading-relaxed" data-i18n="footer_address">
+                                1st floor, #10, Srinidhi Layout,<br>
+                                Silicon Town, Electronic City Phase 2,<br>
+                                Bengaluru
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-bold mb-6" data-i18n="footer_prod">Product</h4>
+                        <ul class="space-y-4 text-slate-400 text-sm">
+                            <li><a href="#features" class="hover:text-yellow-400 transition-colors"
+                                    data-i18n="nav_features">Features</a></li>
+                            <li><a href="#showcase" class="hover:text-yellow-400 transition-colors"
+                                    data-i18n="nav_twin">Digital Twin</a></li>
+                            <li><a href="#model" class="hover:text-yellow-400 transition-colors"
+                                    data-i18n="nav_how">Partnership Model</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-bold mb-6" data-i18n="footer_comp">Company</h4>
+                        <ul class="space-y-4 text-slate-400 text-sm">
+                            <li><a href="#" class="hover:text-yellow-400 transition-colors"
+                                    data-i18n="footer_about">About Us</a></li>
+                            <li><a href="#contact" class="hover:text-yellow-400 transition-colors"
+                                    data-i18n="footer_contact">Contact</a></li>
+                            <li><a href="#" class="hover:text-yellow-400 transition-colors"
+                                    data-i18n="footer_privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div
+                    class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="text-slate-500 text-xs">
+                        &copy; 2026 Yuguyu Inc. All rights reserved.
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-yellow-400 hover:text-slate-900 transition-all"><i
+                                data-lucide="twitter" class="w-4 h-4"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-yellow-400 hover:text-slate-900 transition-all"><i
+                                data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-yellow-400 hover:text-slate-900 transition-all"><i
+                                data-lucide="instagram" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://s.pageclip.co/v1/pageclip.js" charset="utf-8"></script>
+    <script>
+        lucide.createIcons();
+
+        /* --- LANGUAGE DATA --- */
+        const translations = {
+            en: {
+                nav_features: "Features",
+                nav_twin: "Brand",
+                nav_how: "How it Works",
+                nav_faqs: "FAQs",
+                nav_login: "Member Login",
+                nav_partner: "Become a Partner",
+
+                hero_badge: "The Gym OS Revolution",
+                hero_title_1: "Turn Your Gym Into A",
+                hero_title_2: "Smart Gym.",
+                hero_desc: "Replace paper registers and fragmented tools with a single, unified Operating System. The first platform that connects your <b>Command Center</b> with your members' <b>Experience Engine</b>.",
+                hero_cta: "Get Command Center",
+                hero_check_1: "Real-time Operations",
+                hero_check_2: "Zero Revenue Leakage",
+                hero_check_3: "100% Ad-Free",
+                phone_badge: "Partner Access Active",
+
+                features_title_1: "For Owners:",
+                features_title_2: "The Command Center",
+                features_subtitle: "Your gym's nerve center. See everything that matters at a glance — revenue, members, and operations — all in real-time.",
+
+                features_title_3: "For Members:",
+                features_title_4: "The Experience Engine",
+                features_subtitle_2: "A premium pocket coach your members will love. Track nutrition, log workouts, and watch their progress come alive.",
+
+                feat_1_title: "The Truth Screen",
+                feat_1_desc: "Real-time occupancy & revenue at a glance. Track active members and new signups instantly. Eliminate the need for guessing daily cash flow.",
+                feat_2_title: "Digital Member Register",
+                feat_2_desc: "Replace paper notebooks. Searchable database tracking Plan Type, Join Date, and Expiry status.",
+                feat_3_title: "Pocket Nutritionist",
+                feat_3_desc: "Set calorie goals (e.g. 2000 kcal). Track Proteins, Carbs, and Fats. Virtual coaching in their pocket.",
+                feat_4_title: "Digital Workout Log",
+                feat_4_desc: "Access split routines (Push, Chest, Leg Day). Log sets, reps, and RPE. Replaces paper workout diaries.",
+
+                journey_badge: "Beyond Tracking",
+                journey_title_1: "Your Members'",
+                journey_title_2: "Growth Journey",
+                journey_desc: "More than just numbers. A complete transformation companion that celebrates wins, surfaces actionable insights, and keeps members engaged day after day.",
+                journey_card_1_title: "Smart Insights",
+                journey_card_1_desc: "Personalized nudges that notice patterns. \"You haven't logged in 2 days\" or \"Great week! Your protein intake is up 15%.\"",
+                journey_card_2_title: "Diet Calendar",
+                journey_card_2_desc: "Visual history of every meal logged. Tap any date to see exactly what they ate, macro breakdowns, and daily totals.",
+                journey_tagline: "\"Every rep recorded. Every meal logged. Every win celebrated.\"",
+
+                twin_badge: "Brand Integration",
+                twin_title_1: "Your Gym.",
+                twin_title_2: "Your Rules.",
+                twin_title_3: "One Ecosystem.",
+                twin_desc: "<b>High Engagement = High Retention.</b> The more your members use the app, the more they stay committed to your gym. We help you build habits that keep them coming back.",
+                twin_point_1_title: "Co-Branded Experience",
+                twin_point_1_desc: "Members see this as part of their gym membership experience. Seamless integration, no confusion.",
+                twin_point_2_title: "The Retention Engine",
+                twin_point_2_desc: "Digital engagement drives physical attendance. Bridge the gap between the kitchen and the squat rack.",
+                twin_point_3_title: "Zero Competitor Noise",
+                twin_point_3_desc: "A clean, focused environment tailored to your programming. No distraction.",
+
+                prob_title_1: "Stop the",
+                prob_title_2: "Leakage.",
+                prob_desc_1: "When you tell a member to 'just download a generic tracking app', you are sending them to an app that shows them ads for other coaches and supplement brands.",
+                prob_desc_2: "Keep them in your ecosystem.",
+                prob_point_1_title: "No Competitor Ads",
+                prob_point_1_desc: "A completely clean, ad-free environment.",
+                prob_point_2_title: "Data You Can See",
+                prob_point_2_desc: "Access member data to monitor compliance.",
+
+                standout_title_1: "Stand Out.",
+                standout_title_2: "From the Crowd.",
+                standout_desc: "Every gym has dumbbells. Start operating like a tech company. Differentiate your facility from generic gyms and big chains.",
+                standout_point_1_title: "Beat the Chains",
+                standout_point_1_desc: "Big franchises have their own apps. Now you do too. Level the playing field instantly.",
+                standout_point_2_title: "Premium Status",
+                standout_point_2_desc: "Command premium positioning with a modern, tech-enabled experience.",
+
+                model_title_1: "The",
+                model_title_2: "Model",
+                model_desc: "We don't sell to individuals. We partner with facilities to provide premium access keys as a value-add to membership tiers.",
+                step_1_title: "Onboard",
+                step_1_desc: "Purchase a license pack. We set up your branded instance.",
+                step_2_title: "Manage via Portal",
+                step_2_desc: "Grant or revoke access to members directly from your Gym Portal.",
+                step_3_title: "Member Unlocks",
+                step_3_desc: "Member downloads app, logs in, and gets the Pro experience instantly.",
+
+                faq_header: "Gym Owner",
+                faq_subheader: "Real questions about implementation and value.",
+                faq_1_q: "Do I have to manually enter all my member details?",
+                faq_1_a: "Not at all. We offer a <b>White-Glove Setup Service</b>. You simply hand us your current register or Excel sheet, and our team digitizes everything for you within 24 hours. You start with a fully populated dashboard from Day 1.",
+                faq_2_q: "Why should I pay for software when I have a notebook?",
+                faq_2_a: "A notebook cannot send push notifications or track calorie intake. Yuguyu pays for itself if it saves just one member from quitting. By giving your members a premium diet and workout tracker, you stop them from leaving for expensive franchise gyms. <b>It's not an expense; it's a retention tool.</b>",
+                faq_3_q: "I'm not very tech-savvy. Is this hard to use?",
+                faq_3_a: "We designed Yuguyu specifically for gym owners, not IT experts. <b>If you can use WhatsApp, you can use Yuguyu.</b> The dashboard is visual, simple, and in English. Plus, we provide 24/7 WhatsApp support if you ever get stuck.",
+                faq_4_q: "Is my member data safe? Will other gyms see it?",
+                faq_4_a: "Absolutely not. Your data is encrypted and stored in a private <b>\"Walled Garden.\"</b> You own your data. We do not share member lists with other gyms, and we strictly prohibit competitor advertising within your gym's ecosystem.",
+
+                contact_title: "Start Your Pilot.",
+                contact_desc: "Partner with Yuguyu to bring elite nutrition infrastructure to your facility.",
+                partnerships: "Partnerships",
+                call_us: "Call Us",
+                request_deck: "Request Partner Deck",
+
+                footer_desc: "The operating system for smart gyms. Replace analog tools with a digital ecosystem.",
+                footer_address: "1st floor, #10, Srinidhi Layout,<br>Silicon Town, Electronic City Phase 2,<br>Bengaluru",
+                footer_prod: "Product",
+                footer_comp: "Company",
+                footer_about: "About Us",
+                footer_contact: "Contact",
+                footer_privacy: "Privacy Policy"
+            },
+            hi: {
+                nav_features: "विशेषताएं",
+                nav_twin: "ब्रांड",
+                nav_how: "यह कैसे काम करता है",
+                nav_faqs: "प्रश्न",
+                nav_login: "लॉगिन",
+                nav_partner: "पार्टनर बनें",
+
+                hero_badge: "जिम OS क्रांति",
+                hero_title_1: "अपने जिम को",
+                hero_title_2: "स्मार्ट जिम में बदलें।",
+                hero_desc: "पेपर रजिस्टर और बिखरे उपकरणों को एक एकीकृत ऑपरेटिंग सिस्टम से बदलें। पहला प्लेटफॉर्म जो आपके <b>कमांड सेंटर</b> को आपके सदस्यों के <b>एक्सपीरियंस इंजन</b> से जोड़ता है।",
+                hero_cta: "कमांड सेंटर प्राप्त करें",
+                hero_check_1: "रियल-टाइम ऑपरेशंस",
+                hero_check_2: "जीरो रेवेन्यू लीकेज",
+                hero_check_3: "100% विज्ञापन-मुक्त",
+                phone_badge: "पार्टनर एक्सेस सक्रिय",
+
+                features_title_1: "मालिकों के लिए:",
+                features_title_2: "कमांड सेंटर",
+                features_subtitle: "आपके जिम का नर्व सेंटर। राजस्व, सदस्य और संचालन - सब कुछ एक नज़र में रियल-टाइम में देखें।",
+                features_title_3: "सदस्यों के लिए:",
+                features_title_4: "एक्सपीरियंस इंजन",
+                features_subtitle_2: "एक प्रीमियम पॉकेट कोच जिसे आपके सदस्य पसंद करेंगे। पोषण ट्रैक करें, वर्कआउट लॉग करें, और प्रगति देखें।",
+
+                feat_1_title: "ट्रुथ स्क्रीन",
+                feat_1_desc: "रियल-टाइम ऑक्यूपेंसी और राजस्व एक नज़र में। सक्रिय सदस्यों और नए साइनअप को तुरंत ट्रैक करें।",
+                feat_2_title: "डिजिटल मेंबर रजिस्टर",
+                feat_2_desc: "पेपर नोटबुक को बदलें। प्लान टाइप, जॉइन डेट और एक्सपायरी स्टेटस ट्रैक करने वाला सर्च करने योग्य डेटाबेस।",
+                feat_3_title: "पॉकेट न्यूट्रिशनिस्ट",
+                feat_3_desc: "कैलोरी लक्ष्य सेट करें (जैसे 2000 kcal)। प्रोटीन, कार्ब्स और फैट्स ट्रैक करें। उनकी जेब में वर्चुअल कोचिंग।",
+                feat_4_title: "डिजिटल वर्कआउट लॉग",
+                feat_4_desc: "स्प्लिट रूटीन (पुश, चेस्ट, लेग डे) एक्सेस करें। सेट्स, रेप्स और RPE लॉग करें। पेपर वर्कआउट डायरी को बदलता है।",
+
+                journey_badge: "ट्रैकिंग से परे",
+                journey_title_1: "आपके सदस्यों की",
+                journey_title_2: "ग्रोथ जर्नी",
+                journey_desc: "सिर्फ नंबर्स नहीं। एक पूर्ण ट्रांसफॉर्मेशन साथी जो जीत का जश्न मनाता है, कार्रवाई योग्य इनसाइट्स देता है, और सदस्यों को हर दिन जोड़े रखता है।",
+                journey_card_1_title: "स्मार्ट इनसाइट्स",
+                journey_card_1_desc: "पर्सनलाइज्ड नज जो पैटर्न को नोटिस करते हैं। \"आपने 2 दिनों से लॉग नहीं किया\" या \"शानदार सप्ताह! आपका प्रोटीन इनटेक 15% बढ़ा।\"",
+                journey_card_2_title: "डाइट कैलेंडर",
+                journey_card_2_desc: "हर लॉग किए गए भोजन का विजुअल हिस्ट्री। किसी भी तारीख पर टैप करें और देखें कि उन्होंने क्या खाया, मैक्रो ब्रेकडाउन और डेली टोटल्स।",
+                journey_tagline: "\"हर रेप रिकॉर्डेड। हर मील लॉग्ड। हर जीत सेलिब्रेटेड।\"",
+
+                twin_badge: "ब्रांड इंटीग्रेशन",
+                twin_title_1: "आपका जिम।",
+                twin_title_2: "आपके नियम।",
+                twin_title_3: "एक इकोसिस्टम।",
+                twin_desc: "<b>हाई एंगेजमेंट = हाई रिटेंशन।</b> जितना ज्यादा आपके सदस्य ऐप का उपयोग करते हैं, उतना ज्यादा वे आपके जिम के प्रति प्रतिबद्ध रहते हैं। हम आदतें बनाने में मदद करते हैं जो उन्हें वापस लाती हैं।",
+                twin_point_1_title: "को-ब्रांडेड एक्सपीरियंस",
+                twin_point_1_desc: "सदस्य इसे अपनी जिम मेंबरशिप का हिस्सा मानते हैं। सहज एकीकरण, कोई भ्रम नहीं।",
+                twin_point_2_title: "रिटेंशन इंजन",
+                twin_point_2_desc: "डिजिटल एंगेजमेंट भौतिक उपस्थिति को बढ़ाता है। किचन और स्क्वाट रैक के बीच की खाई को पाटें।",
+                twin_point_3_title: "जीरो कॉम्पिटिटर नॉइज़",
+                twin_point_3_desc: "आपकी प्रोग्रामिंग के अनुरूप एक स्वच्छ, केंद्रित वातावरण। कोई विचलन नहीं।",
+
+                prob_title_1: "रिसाव",
+                prob_title_2: "बंद करें।",
+                prob_desc_1: "जब आप किसी सदस्य को 'बस एक जेनेरिक ट्रैकिंग ऐप डाउनलोड करने' के लिए कहते हैं, तो आप उन्हें एक ऐसे ऐप पर भेज रहे हैं जो उन्हें अन्य कोचों और सप्लीमेंट ब्रांड्स के विज्ञापन दिखाता है।",
+                prob_desc_2: "उन्हें अपने इकोसिस्टम में रखें।",
+                prob_point_1_title: "कोई कॉम्पिटिटर ऐड्स नहीं",
+                prob_point_1_desc: "एक पूरी तरह से स्वच्छ, विज्ञापन-मुक्त वातावरण।",
+                prob_point_2_title: "डेटा जो आप देख सकते हैं",
+                prob_point_2_desc: "अनुपालन की निगरानी के लिए सदस्य डेटा एक्सेस करें।",
+
+                standout_title_1: "अलग दिखें।",
+                standout_title_2: "भीड़ से।",
+                standout_desc: "हर जिम में डंबल होते हैं। टेक कंपनी की तरह ऑपरेट करना शुरू करें। अपनी सुविधा को जेनेरिक जिम और बड़ी चेन से अलग करें।",
+                standout_point_1_title: "चेन को हराएं",
+                standout_point_1_desc: "बड़ी फ्रेंचाइजी के पास अपने ऐप हैं। अब आपके पास भी है। तुरंत मैदान बराबर करें।",
+                standout_point_2_title: "प्रीमियम स्टेटस",
+                standout_point_2_desc: "मॉडर्न, टेक-एनेबल्ड एक्सपीरियंस के साथ प्रीमियम पोजिशनिंग हासिल करें।",
+
+                model_title_1: "",
+                model_title_2: "युगुयु मॉडल",
+                model_desc: "हम व्यक्तियों को नहीं बेचते हैं। हम सदस्यता स्तरों में वैल्यू-ऐड के रूप में प्रीमियम एक्सेस कीज़ प्रदान करने के लिए सुविधाओं के साथ पार्टनर करते हैं।",
+                step_1_title: "ऑनबोर्ड",
+                step_1_desc: "लाइसेंस पैक खरीदें। हम आपका ब्रांडेड इंस्टेंस सेट करते हैं।",
+                step_2_title: "पोर्टल से मैनेज करें",
+                step_2_desc: "अपने जिम पोर्टल से सीधे सदस्यों को एक्सेस दें या हटाएं।",
+                step_3_title: "मेंबर अनलॉक",
+                step_3_desc: "सदस्य ऐप डाउनलोड करता है, लॉग इन करता है, और तुरंत प्रो एक्सपीरियंस पाता है।",
+
+                faq_header: "जिम मालिक",
+                faq_subheader: "इम्प्लीमेंटेशन और वैल्यू के बारे में असली सवाल।",
+                faq_1_q: "क्या मुझे सभी सदस्य विवरण मैन्युअली दर्ज करने होंगे?",
+                faq_1_a: "बिल्कुल नहीं। हम <b>व्हाइट-ग्लव सेटअप सर्विस</b> प्रदान करते हैं। आप बस अपना मौजूदा रजिस्टर या एक्सेल शीट हमें दें, और हमारी टीम 24 घंटे में सब कुछ डिजिटाइज़ कर देती है। आप डे 1 से पूरी तरह से भरे हुए डैशबोर्ड के साथ शुरू करते हैं।",
+                faq_2_q: "जब मेरे पास नोटबुक है तो सॉफ्टवेयर के लिए क्यों भुगतान करूं?",
+                faq_2_a: "एक नोटबुक पुश नोटिफिकेशन नहीं भेज सकती या कैलोरी इनटेक ट्रैक नहीं कर सकती। युगुयु खुद के लिए भुगतान कर लेता है अगर यह सिर्फ एक सदस्य को छोड़ने से बचाता है। अपने सदस्यों को प्रीमियम डाइट और वर्कआउट ट्रैकर देकर, आप उन्हें महंगे फ्रेंचाइज जिम के लिए छोड़ने से रोकते हैं। <b>यह खर्च नहीं है; यह रिटेंशन टूल है।</b>",
+                faq_3_q: "मैं बहुत टेक-सैवी नहीं हूं। क्या यह उपयोग करना मुश्किल है?",
+                faq_3_a: "हमने युगुयु को विशेष रूप से जिम मालिकों के लिए डिज़ाइन किया है, IT विशेषज्ञों के लिए नहीं। <b>अगर आप व्हाट्सऐप उपयोग कर सकते हैं, तो आप युगुयु उपयोग कर सकते हैं।</b> डैशबोर्ड विज़ुअल, सरल और हिंदी में है। साथ ही, हम 24/7 व्हाट्सऐप सपोर्ट प्रदान करते हैं।",
+                faq_4_q: "क्या मेरे सदस्य का डेटा सुरक्षित है? क्या अन्य जिम इसे देख सकते हैं?",
+                faq_4_a: "बिल्कुल नहीं। आपका डेटा एन्क्रिप्टेड है और एक प्राइवेट <b>\"वॉल्ड गार्डन\"</b> में स्टोर है। आप अपने डेटा के मालिक हैं। हम अन्य जिम के साथ सदस्य सूचियां साझा नहीं करते हैं, और हम आपके जिम के इकोसिस्टम में कॉम्पिटिटर एडवरटाइजिंग को सख्ती से प्रतिबंधित करते हैं।",
+
+                contact_title: "अपना पायलट शुरू करें।",
+                contact_desc: "अपनी सुविधा में एलीट न्यूट्रिशन इंफ्रास्ट्रक्चर लाने के लिए युगुयु के साथ पार्टनर करें।",
+                partnerships: "साझेदारी",
+                call_us: "हमें कॉल करें",
+                request_deck: "पार्टनर डेक का अनुरोध करें",
+
+                footer_desc: "स्मार्ट जिम के लिए ऑपरेटिंग सिस्टम। एनालॉग टूल्स को डिजिटल इकोसिस्टम से बदलें।",
+                footer_address: "पहली मंजिल, #10, श्रीनिधि लेआउट,<br>सिलिकॉन टाउन, इलेक्ट्रॉनिक सिटी फेज 2,<br>बेंगलुरु",
+                footer_prod: "उत्पाद",
+                footer_comp: "कंपनी",
+                footer_about: "हमारे बारे में",
+                footer_contact: "संपर्क करें",
+                footer_privacy: "गोपनीयता नीति"
+            },
+            kn: {
+                nav_features: "ವೈಶಿಷ್ಟ್ಯಗಳು",
+                nav_twin: "ಬ್ರಾಂಡ್",
+                nav_how: "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",
+                nav_faqs: "ಪ್ರಶ್ನೆಗಳು",
+                nav_login: "ಲಾಗಿನ್",
+                nav_partner: "ಪಾಲುದಾರರಾಗಿ",
+
+                hero_badge: "ಜಿಮ್ OS ಕ್ರಾಂತಿ",
+                hero_title_1: "ನಿಮ್ಮ ಜಿಮ್ ಅನ್ನು",
+                hero_title_2: "ಸ್ಮಾರ್ಟ್ ಜಿಮ್ ಆಗಿ ಬದಲಾಯಿಸಿ.",
+                hero_desc: "ಪೇಪರ್ ರಿಜಿಸ್ಟರ್ ಮತ್ತು ಚದುರಿದ ಉಪಕರಣಗಳನ್ನು ಏಕೀಕೃತ ಆಪರೇಟಿಂಗ್ ಸಿಸ್ಟಮ್‌ನಿಂದ ಬದಲಾಯಿಸಿ.",
+                hero_cta: "ಕಮಾಂಡ್ ಸೆಂಟರ್ ಪಡೆಯಿರಿ",
+                hero_check_1: "ರಿಯಲ್-ಟೈಮ್ ಕಾರ್ಯಾಚರಣೆಗಳು",
+                hero_check_2: "ಜೀರೋ ಆದಾಯ ಸೋರಿಕೆ",
+                hero_check_3: "100% ಜಾಹೀರಾತು-ಮುಕ್ತ",
+                phone_badge: "ಪಾಲುದಾರ ಪ್ರವೇಶ ಸಕ್ರಿಯ",
+
+                features_title_1: "ಮಾಲೀಕರಿಗೆ:",
+                features_title_2: "ಕಮಾಂಡ್ ಸೆಂಟರ್",
+                features_subtitle: "ನಿಮ್ಮ ಜಿಮ್‌ನ ನರ ಕೇಂದ್ರ. ಆದಾಯ, ಸದಸ್ಯರು ಮತ್ತು ಕಾರ್ಯಾಚರಣೆಗಳು - ಎಲ್ಲವೂ ಒಂದೇ ನೋಟದಲ್ಲಿ.",
+                features_title_3: "ಸದಸ್ಯರಿಗೆ:",
+                features_title_4: "ಎಕ್ಸ್‌ಪೀರಿಯನ್ಸ್ ಎಂಜಿನ್",
+                features_subtitle_2: "ನಿಮ್ಮ ಸದಸ್ಯರು ಇಷ್ಟಪಡುವ ಪ್ರೀಮಿಯಂ ಪಾಕೆಟ್ ಕೋಚ್.",
+
+                feat_1_title: "ಟ್ರುಥ್ ಸ್ಕ್ರೀನ್",
+                feat_1_desc: "ರಿಯಲ್-ಟೈಮ್ ಆಕ್ಯುಪೆನ್ಸಿ ಮತ್ತು ಆದಾಯ ಒಂದೇ ನೋಟದಲ್ಲಿ.",
+                feat_2_title: "ಡಿಜಿಟಲ್ ಮೆಂಬರ್ ರಿಜಿಸ್ಟರ್",
+                feat_2_desc: "ಪೇಪರ್ ನೋಟ್‌ಬುಕ್ ಅನ್ನು ಬದಲಾಯಿಸಿ. ಹುಡುಕಬಹುದಾದ ಡೇಟಾಬೇಸ್.",
+                feat_3_title: "ಪಾಕೆಟ್ ನ್ಯೂಟ್ರಿಷನಿಸ್ಟ್",
+                feat_3_desc: "ಕ್ಯಾಲೊರಿ ಗುರಿಗಳನ್ನು ಹೊಂದಿಸಿ. ಪ್ರೋಟೀನ್, ಕಾರ್ಬ್ಸ್ ಮತ್ತು ಫ್ಯಾಟ್ಸ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ.",
+                feat_4_title: "ಡಿಜಿಟಲ್ ವರ್ಕೌಟ್ ಲಾಗ್",
+                feat_4_desc: "ಸ್ಪ್ಲಿಟ್ ರೂಟೀನ್‌ಗಳನ್ನು ಪ್ರವೇಶಿಸಿ. ಸೆಟ್‌ಗಳು, ರೆಪ್ಸ್ ಮತ್ತು RPE ಲಾಗ್ ಮಾಡಿ.",
+
+                journey_badge: "ಟ್ರ್ಯಾಕಿಂಗ್ ಮೀರಿ",
+                journey_title_1: "ನಿಮ್ಮ ಸದಸ್ಯರ",
+                journey_title_2: "ಬೆಳವಣಿಗೆಯ ಪ್ರಯಾಣ",
+                journey_desc: "ಸಂಖ್ಯೆಗಳಿಗಿಂತ ಹೆಚ್ಚು. ಗೆಲುವುಗಳನ್ನು ಆಚರಿಸುವ ಸಂಪೂರ್ಣ ರೂಪಾಂತರ ಸಂಗಾತಿ.",
+                journey_card_1_title: "ಸ್ಮಾರ್ಟ್ ಇನ್‌ಸೈಟ್ಸ್",
+                journey_card_1_desc: "ಮಾದರಿಗಳನ್ನು ಗಮನಿಸುವ ವೈಯಕ್ತಿಕ ನಜ್‌ಗಳು.",
+                journey_card_2_title: "ಡಯಟ್ ಕ್ಯಾಲೆಂಡರ್",
+                journey_card_2_desc: "ಪ್ರತಿ ಲಾಗ್ ಮಾಡಿದ ಊಟದ ವಿಷುಯಲ್ ಹಿಸ್ಟರಿ.",
+                journey_tagline: "\"ಪ್ರತಿ ರೆಪ್ ರೆಕಾರ್ಡ್. ಪ್ರತಿ ಊಟ ಲಾಗ್. ಪ್ರತಿ ಗೆಲುವು ಆಚರಣೆ.\"",
+
+                twin_badge: "ಬ್ರಾಂಡ್ ಏಕೀಕರಣ",
+                twin_title_1: "ನಿಮ್ಮ ಜಿಮ್.",
+                twin_title_2: "ನಿಮ್ಮ ನಿಯಮಗಳು.",
+                twin_title_3: "ಒಂದು ಪರಿಸರ ವ್ಯವಸ್ಥೆ.",
+                twin_desc: "<b>ಹೆಚ್ಚಿನ ಎಂಗೇಜ್‌ಮೆಂಟ್ = ಹೆಚ್ಚಿನ ರಿಟೆನ್ಷನ್.</b> ನಿಮ್ಮ ಸದಸ್ಯರು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಹೆಚ್ಚು ಬಳಸುವಷ್ಟು, ಅವರು ನಿಮ್ಮ ಜಿಮ್‌ಗೆ ಹೆಚ್ಚು ಬದ್ಧರಾಗಿರುತ್ತಾರೆ.",
+                twin_point_1_title: "ಸಹ-ಬ್ರಾಂಡ್ ಅನುಭವ",
+                twin_point_1_desc: "ಸದಸ್ಯರು ಇದನ್ನು ತಮ್ಮ ಜಿಮ್ ಸದಸ್ಯತ್ವದ ಭಾಗವಾಗಿ ನೋಡುತ್ತಾರೆ.",
+                twin_point_2_title: "ರಿಟೆನ್ಷನ್ ಎಂಜಿನ್",
+                twin_point_2_desc: "ಡಿಜಿಟಲ್ ಎಂಗೇಜ್‌ಮೆಂಟ್ ಭೌತಿಕ ಹಾಜರಾತಿಯನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ.",
+                twin_point_3_title: "ಶೂನ್ಯ ಪ್ರತಿಸ್ಪರ್ಧಿ ಶಬ್ದ",
+                twin_point_3_desc: "ಸ್ವಚ್ಛ, ಕೇಂದ್ರೀಕೃತ ಪರಿಸರ. ಯಾವುದೇ ವ್ಯಾಕುಲತೆ ಇಲ್ಲ.",
+
+                prob_title_1: "ಸೋರಿಕೆಯನ್ನು",
+                prob_title_2: "ನಿಲ್ಲಿಸಿ.",
+                prob_desc_1: "ಜೆನೆರಿಕ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳಿಗೆ ಸದಸ್ಯರನ್ನು ಕಳುಹಿಸುವುದನ್ನು ನಿಲ್ಲಿಸಿ.",
+                prob_desc_2: "ಅವರನ್ನು ನಿಮ್ಮ ಪರಿಸರ ವ್ಯವಸ್ಥೆಯಲ್ಲಿ ಇರಿಸಿ.",
+                prob_point_1_title: "ಯಾವುದೇ ಪ್ರತಿಸ್ಪರ್ಧಿ ಜಾಹೀರಾತುಗಳಿಲ್ಲ",
+                prob_point_1_desc: "ಸಂಪೂರ್ಣ ಸ್ವಚ್ಛ, ಜಾಹೀರಾತು-ಮುಕ್ತ ಪರಿಸರ.",
+                prob_point_2_title: "ನೀವು ನೋಡಬಹುದಾದ ಡೇಟಾ",
+                prob_point_2_desc: "ಅನುಸರಣೆಯನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಲು ಸದಸ್ಯರ ಡೇಟಾ ಪ್ರವೇಶಿಸಿ.",
+
+                standout_title_1: "ಎದ್ದು ಕಾಣಿ.",
+                standout_title_2: "ಗುಂಪಿನಿಂದ.",
+                standout_desc: "ಪ್ರತಿ ಜಿಮ್‌ನಲ್ಲಿ ಡಂಬೆಲ್‌ಗಳಿವೆ. ಟೆಕ್ ಕಂಪನಿಯಂತೆ ಕಾರ್ಯನಿರ್ವಹಿಸಲು ಪ್ರಾರಂಭಿಸಿ.",
+                standout_point_1_title: "ಚೈನ್‌ಗಳನ್ನು ಸೋಲಿಸಿ",
+                standout_point_1_desc: "ದೊಡ್ಡ ಫ್ರ್ಯಾಂಚೈಸ್‌ಗಳಿಗೆ ತಮ್ಮದೇ ಅಪ್ಲಿಕೇಶನ್‌ಗಳಿವೆ. ಈಗ ನಿಮಗೂ ಇದೆ.",
+                standout_point_2_title: "ಪ್ರೀಮಿಯಂ ಸ್ಥಾನಮಾನ",
+                standout_point_2_desc: "ಆಧುನಿಕ, ಟೆಕ್-ಸಕ್ರಿಯ ಅನುಭವದೊಂದಿಗೆ ಪ್ರೀಮಿಯಂ ಸ್ಥಾನ ಪಡೆಯಿರಿ.",
+
+                model_title_1: "",
+                model_title_2: "ಯುಗಯು ಮಾದರಿ",
+                model_desc: "ನಾವು ವ್ಯಕ್ತಿಗಳಿಗೆ ಮಾರಾಟ ಮಾಡುವುದಿಲ್ಲ. ಸೌಲಭ್ಯಗಳೊಂದಿಗೆ ಪಾಲುದಾರರಾಗಿದ್ದೇವೆ.",
+                step_1_title: "ಆನ್ಬೋರ್ಡ್",
+                step_1_desc: "ಪರವಾನಗಿ ಪ್ಯಾಕ್ ಖರೀದಿಸಿ. ನಿಮ್ಮ ಬ್ರಾಂಡ್ ಇನ್‌ಸ್ಟೆನ್ಸ್ ಸೆಟಪ್.",
+                step_2_title: "ಪೋರ್ಟಲ್ ಮೂಲಕ ನಿರ್ವಹಿಸಿ",
+                step_2_desc: "ನಿಮ್ಮ ಜಿಮ್ ಪೋರ್ಟಲ್‌ನಿಂದ ಸದಸ್ಯರಿಗೆ ಪ್ರವೇಶ ನೀಡಿ ಅಥವಾ ಹಿಂತೆಗೆದುಕೊಳ್ಳಿ.",
+                step_3_title: "ಸದಸ್ಯ ಅನ್ಲಾಕ್",
+                step_3_desc: "ಸದಸ್ಯರು ಅಪ್ಲಿಕೇಶನ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ ಪ್ರೊ ಅನುಭವ ಪಡೆಯುತ್ತಾರೆ.",
+
+                faq_header: "ಜಿಮ್ ಮಾಲೀಕ",
+                faq_subheader: "ಅನುಷ್ಠಾನ ಮತ್ತು ಮೌಲ್ಯದ ಬಗ್ಗೆ ನಿಜವಾದ ಪ್ರಶ್ನೆಗಳು.",
+                faq_1_q: "ನಾನು ಎಲ್ಲಾ ಸದಸ್ಯರ ವಿವರಗಳನ್ನು ಹಸ್ತಚಾಲಿತವಾಗಿ ನಮೂದಿಸಬೇಕೇ?",
+                faq_1_a: "ಇಲ್ಲ. ನಾವು <b>ವೈಟ್-ಗ್ಲೋವ್ ಸೆಟಪ್ ಸೇವೆ</b> ನೀಡುತ್ತೇವೆ. ನಿಮ್ಮ ರಿಜಿಸ್ಟರ್ ಅಥವಾ ಎಕ್ಸೆಲ್ ಶೀಟ್ ನೀಡಿ, ನಾವು 24 ಗಂಟೆಗಳಲ್ಲಿ ಡಿಜಿಟೈಸ್ ಮಾಡುತ್ತೇವೆ.",
+                faq_2_q: "ನೋಟ್‌ಬುಕ್ ಇರುವಾಗ ಸಾಫ್ಟ್‌ವೇರ್‌ಗೆ ಏಕೆ ಪಾವತಿಸಬೇಕು?",
+                faq_2_a: "ನೋಟ್‌ಬುಕ್ ಪುಶ್ ನೋಟಿಫಿಕೇಶನ್ ಕಳುಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಯುಗಯು ಒಬ್ಬ ಸದಸ್ಯನನ್ನು ಉಳಿಸಿದರೆ ತನ್ನನ್ನು ತಾನು ಪಾವತಿಸುತ್ತದೆ. <b>ಇದು ಖರ್ಚು ಅಲ್ಲ; ಇದು ರಿಟೆನ್ಷನ್ ಟೂಲ್.</b>",
+                faq_3_q: "ನಾನು ಟೆಕ್-ಸ್ಯಾವಿ ಅಲ್ಲ. ಇದು ಬಳಸಲು ಕಷ್ಟವೇ?",
+                faq_3_a: "ನಾವು ಯುಗಯು ಅನ್ನು ಜಿಮ್ ಮಾಲೀಕರಿಗಾಗಿ ವಿನ್ಯಾಸಿಸಿದ್ದೇವೆ. <b>ನೀವು ವಾಟ್ಸಾಪ್ ಬಳಸಬಹುದಾದರೆ, ನೀವು ಯುಗಯು ಬಳಸಬಹುದು.</b> 24/7 ವಾಟ್ಸಾಪ್ ಬೆಂಬಲ.",
+                faq_4_q: "ನನ್ನ ಸದಸ್ಯರ ಡೇಟಾ ಸುರಕ್ಷಿತವೇ? ಇತರ ಜಿಮ್‌ಗಳು ನೋಡಬಹುದೇ?",
+                faq_4_a: "ಇಲ್ಲ. ನಿಮ್ಮ ಡೇಟಾ ಎನ್‌ಕ್ರಿಪ್ಟ್ ಆಗಿದೆ ಮತ್ತು ಖಾಸಗಿ <b>\"ವಾಲ್ಡ್ ಗಾರ್ಡನ್\"</b>ನಲ್ಲಿ ಸಂಗ್ರಹಿಸಲಾಗಿದೆ. ನೀವು ನಿಮ್ಮ ಡೇಟಾದ ಮಾಲೀಕರು.",
+
+                contact_title: "ನಿಮ್ಮ ಪೈಲಟ್ ಪ್ರಾರಂಭಿಸಿ.",
+                contact_desc: "ನಿಮ್ಮ ಸೌಲಭ್ಯಕ್ಕೆ ಎಲೈಟ್ ನ್ಯೂಟ್ರಿಷನ್ ಮೂಲಸೌಕರ್ಯ ತರಲು ಯುಗಯು ಜೊತೆ ಪಾಲುದಾರರಾಗಿ.",
+                partnerships: "ಪಾಲುದಾರಿಕೆಗಳು",
+                call_us: "ನಮ್ಮನ್ನು ಕರೆ ಮಾಡಿ",
+                request_deck: "ಪಾಲುದಾರ ಡೆಕ್ ವಿನಂತಿಸಿ",
+
+                footer_desc: "ಸ್ಮಾರ್ಟ್ ಜಿಮ್‌ಗಳಿಗಾಗಿ ಆಪರೇಟಿಂಗ್ ಸಿಸ್ಟಮ್. ಅನಲಾಗ್ ಟೂಲ್‌ಗಳನ್ನು ಡಿಜಿಟಲ್ ಪರಿಸರ ವ್ಯವಸ್ಥೆಯಿಂದ ಬದಲಾಯಿಸಿ.",
+                footer_address: "1 ನೇ ಮಹಡಿ, #10, ಶ್ರೀನಿಧಿ ಲೇಔಟ್,<br>ಸಿಲಿಕಾನ್ ಟೌನ್, ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಸಿಟಿ ಹಂತ 2,<br>ಬೆಂಗಳೂರು",
+                footer_prod: "ಉತ್ಪನ್ನ",
+                footer_comp: "ಕಂಪನಿ",
+                footer_about: "ನಮ್ಮ ಬಗ್ಗೆ",
+                footer_contact: "ಸಂಪರ್ಕಿಸಿ",
+                footer_privacy: "ಗೌಪ್ಯತಾ ನೀತಿ"
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+
+            // Update Text
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update Active Button State (Desktop)
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${lang}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Update Active Button State (Mobile)
+            document.getElementById('current-lang-display').innerText = lang.toUpperCase();
+        }
+
+        function toggleMobileLangMenu() {
+            const menu = document.getElementById('mobile-lang-dropdown');
+            menu.classList.toggle('hidden');
+        }
+
+        /* --- END LANGUAGE DATA --- */
+
+        // Navbar Scroll Styling
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-slate-900/95', 'backdrop-blur-xl', 'border-white/10', 'py-4', 'shadow-2xl');
+                navbar.classList.remove('py-6', 'border-transparent');
+            } else {
+                navbar.classList.remove('bg-slate-900/95', 'backdrop-blur-xl', 'border-white/10', 'py-4', 'shadow-2xl');
+                navbar.classList.add('py-6', 'border-transparent');
+            }
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+        function closeMenu() {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('flex');
+        }
+
+        // Accordion Logic
+        function toggleFaq(btn) {
+            const answer = btn.nextElementSibling;
+            const icon = btn.querySelector('svg');
+
+            // Close others
+            document.querySelectorAll('.faq-answer').forEach(el => {
+                if (el !== answer) {
+                    el.classList.remove('open');
+                    el.previousElementSibling.querySelector('svg').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            answer.classList.toggle('open');
+            icon.style.transform = answer.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Smooth Scroll & Focus to Contact
+        function scrollToContact() {
+            const section = document.getElementById('contact');
+            section.scrollIntoView({ behavior: 'smooth' });
+
+            // Wait for scroll to finish then focus (approx 800ms)
+            setTimeout(() => {
+                document.getElementById('contact-name').focus();
+            }, 800);
+        }
+
+        // Fade In Animation (Premium Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+
+        document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
