@@ -172,6 +172,28 @@
             border-color: #facc15;
             background-color: rgba(250, 204, 21, 0.1);
         }
+
+        /* Premium Glossy Text Animation */
+        .premium-text {
+            background: linear-gradient(to right,
+                    #FACC15 20%,
+                    #fef08a 30%,
+                    #ffffff 40%,
+                    #fef08a 50%,
+                    #FACC15 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+            font-weight: 800;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
     </style>
 </head>
 
@@ -196,7 +218,7 @@
             <a href="/" class="text-2xl font-bold tracking-tighter flex items-center gap-2 group z-50">
                 <img src="logo.svg" alt="Yuguyu Logo"
                     class="w-10 h-10 transition-transform duration-500 group-hover:rotate-12">
-                <span>Yuguyu</span>
+                <span class="premium-text">Yuguyu</span>
             </a>
 
             <!-- Desktop Nav -->
