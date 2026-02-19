@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Yuguyu</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151e32',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .input-field {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #facc15;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(250, 204, 21, 0.4);
+        }
+    </style>
+</head>
+
+<body class="relative min-h-screen flex flex-col">
+
+    <!-- BACKGROUND GLOWS -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div
+            class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-yellow-500/5 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow">
+        </div>
+        <div
+            class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-900/10 rounded-full blur-[100px] mix-blend-screen">
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="absolute top-0 left-0 right-0 z-50 py-6">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html"
+                class="text-2xl font-bold tracking-tighter flex items-center gap-2 group cursor-pointer">
+                <div
+                    class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center text-slate-900 transition-transform duration-500 group-hover:rotate-12">
+                    <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                </div>
+                <span>Yuguyu</span>
+            </a>
+
+            <a href="index.html"
+                class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="flex-grow flex items-center justify-center py-24 px-4">
+        <div class="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center">
+
+            <!-- Contact Info -->
+            <div class="space-y-8">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Let's Build <br><span class="text-yellow-400">Your
+                            Legacy.</span></h1>
+                    <p class="text-slate-400 text-lg leading-relaxed">
+                        Ready to digitize your gym? Have questions about our partnership model? We're here to help.
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-yellow-400/10 text-yellow-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="phone" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Call / WhatsApp
+                            </p>
+                            <a href="tel:+918073994029"
+                                class="text-xl font-bold hover:text-yellow-400 transition-colors">+91 80739 94029</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="mail" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Email Us</p>
+                            <a href="mailto:yuguyu@zohomail.in"
+                                class="text-xl font-bold hover:text-blue-400 transition-colors">yuguyu@zohomail.in</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Visit HQ</p>
+                            <p class="text-sm font-medium text-slate-200">
+                                1st floor, #10, Srinidhi Layout,<br>
+                                Silicon Town, Electronic City Phase 2,<br>
+                                Bengaluru
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formspree Form -->
+            <div class="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden">
+                <div
+                    class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-400">
+                </div>
+
+                <h3 class="text-2xl font-bold mb-6">Send a Message</h3>
+
+                <!-- Replace 'YOUR_FORM_ID' with your actual Formspree Form ID -->
+                <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="space-y-4">
+
+                    <div>
+                        <label class="block text-slate-400 text-xs font-bold uppercase mb-2">Full Name</label>
+                        <input type="text" name="name" required
+                            class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-slate-600"
+                            placeholder="John Doe">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-400 text-xs font-bold uppercase mb-2">Gym Name</label>
+                        <input type="text" name="gym_name" required
+                            class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-slate-600"
+                            placeholder="Spartan Fitness">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-400 text-xs font-bold uppercase mb-2">Email Address</label>
+                        <input type="email" name="email" required
+                            class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-slate-600"
+                            placeholder="john@example.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-400 text-xs font-bold uppercase mb-2">Message</label>
+                        <textarea name="message" rows="4" required
+                            class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-slate-600"
+                            placeholder="Tell us about your requirements..."></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-yellow-400 text-slate-900 font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-all shadow-[0_0_20px_rgba(250,204,21,0.3)] btn-hover mt-2">
+                        Send Request
+                    </button>
+
+                    <p class="text-center text-xs text-slate-500 mt-4">
+                        We typically respond within 2-4 hours.
+                    </p>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-8 bg-slate-950/50 border-t border-white/5 text-center text-slate-500 text-xs">
+        &copy; 2026 Yuguyu Inc. All rights reserved.
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
